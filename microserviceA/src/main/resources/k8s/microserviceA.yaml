@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-a
+  namespace: feignclient
+  labels:
+    app: microservice-a
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: microservice-a
+  template:
+    metadata:
+      labels:
+        app: microservice-a
+    spec:
+      containers:
+        - name: microservice-a
+          image: microservice-a:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice-a
+  namespace: feignclient
+spec:
+  selector:
+    app: microservice-a
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081
